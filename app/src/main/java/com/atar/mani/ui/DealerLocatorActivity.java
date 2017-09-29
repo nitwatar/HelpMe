@@ -1,6 +1,7 @@
 package com.atar.mani.ui;
 
 import android.animation.Animator;
+import android.animation.LayoutTransition;
 import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +24,11 @@ import java.util.ArrayList;
 
 /**
  * Created by atarmanipandey on 27/9/17.
+ *
+ * Things you have to remember :
+ * Visibility will occupy space in layout, Gone will not occupy space in layout
+ * Also animation will change drawing area, but area occupied will be same as earlier, so in order to move a view, you should change layout.
+ * whenever we add or remove views, layout is changed, and we can tell the system to animate layout changes using android:animateLayoutChanges=true
  */
 
 public class DealerLocatorActivity extends AppCompatActivity {
@@ -33,6 +39,7 @@ public class DealerLocatorActivity extends AppCompatActivity {
     Button buttonSearch;
     LinearLayout llinner,llouter,llouter1 ;
     ImageView img;
+    TextView txt;
     private boolean isAnimationDone = false;
 
     @Override
@@ -45,15 +52,23 @@ public class DealerLocatorActivity extends AppCompatActivity {
         llouter = (LinearLayout) findViewById(R.id.ll_finddealer_outer);
         llouter1 = (LinearLayout) findViewById(R.id.ll_finddealer_outer1);
         img = (ImageView) findViewById(R.id.ivDealerLocator);
+        txt = (TextView)findViewById(R.id.textView_findDealer);
+
 
         buttonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!isAnimationDone) {
-                    animateView();
-                }else{
-                    loadDealerList();
-                }
+                Log.d("DealarLocator", "buttonSearch onClick");
+                loadDealerList();
+                img.setVisibility(View.GONE);
+                txt.setVisibility(View.GONE);
+
+
+//                if(!isAnimationDone) {
+//                    animateView();
+//                }else{
+//                    loadDealerList();
+//                }
 
             }
         });
@@ -98,11 +113,10 @@ public class DealerLocatorActivity extends AppCompatActivity {
     }
 
     private void loadDealerList() {
-        recyclerView.requestLayout();
-        recyclerView.setVisibility(View.VISIBLE);
+//        recyclerView.requestLayout();
         DealersListAdpater adapter = new DealersListAdpater(DealersData.getDealerList());
         recyclerView.setAdapter(adapter);
-
+        recyclerView.setVisibility(View.VISIBLE);
     }
 
 
